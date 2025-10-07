@@ -10,7 +10,7 @@ export default function Charts({ chartData }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
       
-      {/* Chart 1: Biweekly Cashier Sales with Interactive Brush */}
+      {/* Chart 1: Biweekly Cashier Sales */}
       <section>
         <h2>Cashier Sales (Biweekly)</h2>
         <ResponsiveContainer width="100%" height={400}>
@@ -41,21 +41,19 @@ export default function Charts({ chartData }) {
         </ResponsiveContainer>
       </section>
 
-      {/* Chart 3: All Promoters in a Scrollable Container */}
+      {/* Chart 3: Top 10 Promoters */}
       <section>
-        <h2>Free Cover Promoters (All)</h2>
-        <div style={{ width: '100%', height: '500px', overflowY: 'scroll', border: '1px solid #eee', padding: '10px' }}>
-            <ResponsiveContainer width="100%" height={aggregatedPromoters.length * 40}>
-              <BarChart data={aggregatedPromoters} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis type="category" dataKey="name" width={150} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
-              </BarChart>
-            </ResponsiveContainer>
-        </div>
+        <h2>Top 10 Free Cover Promoters</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart data={aggregatedPromoters} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis type="category" dataKey="name" width={150} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
+          </BarChart>
+        </ResponsiveContainer>
       </section>
 
     </div>
