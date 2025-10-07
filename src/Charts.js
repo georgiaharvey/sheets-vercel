@@ -94,7 +94,6 @@ const FOHDashboard = () => {
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">FOH Reporting Dashboard</h1>
             <p className="text-purple-200">
-              {activeTab === 'overview' && 'June 19 - August 23, 2024'}
               {activeTab === 'guests' && 'August 7 - August 23, 2024'}
               {activeTab === 'cashier' && 'June 19 - August 23, 2024'}
               {activeTab === 'tables' && 'July 26 - August 23, 2024'}
@@ -107,7 +106,7 @@ const FOHDashboard = () => {
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-6">
-          {['overview', 'guests', 'cashier', 'tables'].map((tab) => (
+          {['guests', 'cashier', 'tables'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
