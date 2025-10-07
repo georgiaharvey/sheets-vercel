@@ -1,8 +1,8 @@
 // src/Charts.js
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
 
 // A helper to format numbers as dollars
-const dollarFormatter = (value) => `$${new Intl.NumberFormat('en').format(value)}`;
+const dollarFormatter = (value) => `$${new Intl.NumberFormat('en').format(Math.round(value))}`;
 
 export default function Charts({ chartData }) {
   const { biweeklyCashierSales, biweeklyTableSales, aggregatedPromoters } = chartData;
@@ -10,17 +10,18 @@ export default function Charts({ chartData }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
       
-      {/* Chart 1: Biweekly Cashier Sales */}
+      {/* Chart 1: Biweekly Cashier Sales with Interactive Brush */}
       <section>
         <h2>Cashier Sales (Biweekly)</h2>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={biweeklyCashierSales}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="period" />
+            <XAxis dataKey="period" height={60} angle={-30} textAnchor="end" />
             <YAxis tickFormatter={dollarFormatter} />
             <Tooltip formatter={dollarFormatter} />
             <Legend />
             <Line type="monotone" dataKey="totalSales" name="Total Sales" stroke="#8884d8" />
+            <Brush dataKey="period" height={30} stroke="#8884d8" />
           </LineChart>
         </ResponsiveContainer>
       </section>
@@ -40,19 +41,21 @@ export default function Charts({ chartData }) {
         </ResponsiveContainer>
       </section>
 
-      {/* Chart 3: Top 10 Promoters */}
+      {/* Chart 3: All Promoters in a Scrollable Container */}
       <section>
-        <h2>Top 10 Free Cover Promoters</h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={aggregatedPromoters} layout="vertical">
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis type="category" dataKey="name" width={120} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
-          </BarChart>
-        </ResponsiveContainer>
+        <h2>Free Cover Promoters (All)</h2>
+        <div style={{ width: '100%', height: '500px', overflowY: 'scroll', border: '1px solid #eee', padding: '10px' }}>
+            <ResponsiveContainer width="100%" height={aggregatedPromoters.length * 40}>
+              <BarChart data={aggregatedPromoters} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis type="category" dataKey="name" width={150} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
+              </BarChart>
+            </ResponsiveContainer>
+        </div>
       </section>
 
     </div>
