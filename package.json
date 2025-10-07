@@ -1,18 +1,4 @@
 {
-  "name": "sheets-vercel",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "14.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "googleapis": "^131.0.0"
-  }
-{
   "name": "sheets-vercel-dashboard",
   "private": true,
   "scripts": {
@@ -29,4 +15,3 @@
     "axios": "^1.4.0"
   }
 }
-
