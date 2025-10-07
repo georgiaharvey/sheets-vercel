@@ -93,7 +93,12 @@ const FOHDashboard = () => {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">FOH Reporting Dashboard</h1>
-            <p className="text-purple-200">July 26 - August 23, 2024</p>
+            <p className="text-purple-200">
+              {activeTab === 'overview' && 'June 19 - August 23, 2024'}
+              {activeTab === 'guests' && 'August 7 - August 23, 2024'}
+              {activeTab === 'cashier' && 'June 19 - August 23, 2024'}
+              {activeTab === 'tables' && 'July 26 - August 23, 2024'}
+            </p>
           </div>
           <div className="text-6xl font-serif text-yellow-500 tracking-wider" style={{ fontFamily: 'Georgia, serif' }}>
             LUNA
@@ -179,7 +184,6 @@ const FOHDashboard = () => {
               
               {/* Top 10 Chart */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-purple-300 mb-4">Top 10 Promoters by Total Guests</h3>
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart data={guestCountData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -236,15 +240,6 @@ const FOHDashboard = () => {
             {/* Biweekly Summary */}
             <div className="bg-slate-800 rounded-xl p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Cashier Sales - Biweekly Summary</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {biweeklyData.map((period, index) => (
-                  <div key={index} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6">
-                    <div className="text-blue-100 text-sm font-medium mb-2">{period.period}</div>
-                    <div className="text-3xl font-bold text-white mb-1">{formatCurrencyDetailed(period.totalSales)}</div>
-                    <div className="text-blue-200 text-sm">Avg: {formatCurrencyDetailed(period.avgPerNight)}/night</div>
-                  </div>
-                ))}
-              </div>
 
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={biweeklyData}>
@@ -308,15 +303,6 @@ const FOHDashboard = () => {
             {/* Biweekly Summary */}
             <div className="bg-slate-800 rounded-xl p-6 shadow-xl">
               <h2 className="text-2xl font-bold text-white mb-6">Bottle Girl Table Sales - Biweekly Summary</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                {biweeklyTableData.map((period, index) => (
-                  <div key={index} className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-6">
-                    <div className="text-pink-100 text-sm font-medium mb-2">{period.period}</div>
-                    <div className="text-3xl font-bold text-white mb-1">{formatCurrencyDetailed(period.totalSales)}</div>
-                    <div className="text-pink-200 text-sm">Avg: {formatCurrencyDetailed(period.avgPerNight)}/night</div>
-                  </div>
-                ))}
-              </div>
 
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={biweeklyTableData}>
