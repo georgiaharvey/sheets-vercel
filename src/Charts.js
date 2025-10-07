@@ -1,76 +1,60 @@
 // src/Charts.js
-import React from "react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
 
-function parseMoney(s) {
-  if (!s) return 0;
-  try {
-    return parseFloat(String(s).replace(/[^0-9.-]/g, "")) || 0;
-  } catch { return 0; }
-}
+// A helper to format numbers as dollars
+const dollarFormatter = (value) => `$${new Intl.NumberFormat('en').format(value)}`;
 
-export default function Charts({ structured }) {
-  const cashier = structured.cashierReporting || [];
-  // build timeseries for Total Sales (or "Total Sales:" label)
-  const timeseries = cashier.map(r => {
-    const total = r["Total Sales"] || r["Total Sales:"] || r["Total Sales: "] || r["Total Sales:"] || r["Total Sales"] || r["Total Sales "];
-    return { date: r.Date || r["Date"] || r["Date:"], total: parseMoney(total) };
-  }).filter(d => d.date);
-
-  const freeCoverKeys = Object.keys(structured.freeCover || {});
-  // Build a simple pie data aggregated by promoter name (sum counts)
-  const promoterCounts = {};
-  for (const key of freeCoverKeys) {
-    const sheet = structured.freeCover[key];
-    if (!sheet || !sheet.items) continue;
-    for (const item of sheet.items) {
-      const name = item["Name"] || Object.values(item)[0] || "";
-      const countRaw = item["Count of guests"] || item["Count"] || Object.values(item)[1] || "";
-      const cnt = parseInt(String(countRaw).replace(/[^0-9]/g,"")) || 0;
-      if (!name) continue;
-      promoterCounts[name] = (promoterCounts[name] || 0) + cnt;
-    }
-  }
-  const pieData = Object.entries(promoterCounts).slice(0,10).map(([name, value]) => ({ name, value }));
+export default function Charts({ chartData }) {
+  const { biweeklyCashierSales, biweeklyTableSales, aggregatedPromoters } = chartData;
 
   return (
-    <div>
-      <h3>Sales Over Time</h3>
-      <div style={{ width: "100%", height: 260 }}>
-        <ResponsiveContainer>
-          <LineChart data={timeseries}>
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      
+      {/* Chart 1: Biweekly Cashier Sales */}
+      <section>
+        <h2>Cashier Sales (Biweekly)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={biweeklyCashierSales}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="period" />
+            <YAxis tickFormatter={dollarFormatter} />
+            <Tooltip formatter={dollarFormatter} />
             <Legend />
-            <Line type="monotone" dataKey="total" stroke="#8884d8" />
+            <Line type="monotone" dataKey="totalSales" name="Total Sales" stroke="#8884d8" />
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </section>
 
-      <h3 style={{ marginTop: 20 }}>Top Free Cover Promoters (sample)</h3>
-      <div style={{ width: "100%", height: 300 }}>
-        <ResponsiveContainer>
-          <BarChart data={pieData}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
+      {/* Chart 2: Biweekly Gross Table Sales */}
+      <section>
+        <h2>Gross Table Sales (Biweekly)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={biweeklyTableSales}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="period" />
+            <YAxis tickFormatter={dollarFormatter} />
+            <Tooltip formatter={dollarFormatter} />
             <Legend />
-            <Bar dataKey="value" fill="#82ca9d" />
+            <Bar dataKey="grossSales" name="Gross Sales" fill="#82ca9d" />
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </section>
 
-      <h3 style={{ marginTop: 20 }}>Promoter Distribution (pie)</h3>
-      <div style={{ width: "100%", height: 260 }}>
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={40} outerRadius={80} label>
-              {pieData.map((entry, i) => <Cell key={`cell-${i}`} />)}
-            </Pie>
-          </PieChart>
+      {/* Chart 3: Top 10 Promoters */}
+      <section>
+        <h2>Top 10 Free Cover Promoters</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart data={aggregatedPromoters} layout="vertical">
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis type="category" dataKey="name" width={120} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
+          </BarChart>
         </ResponsiveContainer>
-      </div>
+      </section>
+
     </div>
   );
 }
