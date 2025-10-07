@@ -1,38 +1,42 @@
 // src/Charts.js
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer, Brush } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 // A helper to format numbers as dollars
 const dollarFormatter = (value) => `$${new Intl.NumberFormat('en').format(Math.round(value))}`;
 
 export default function Charts({ chartData }) {
-  const { biweeklyCashierSales, biweeklyTableSales, aggregatedPromoters } = chartData;
+  const { monthlyCashierSales, monthlyTableSales, aggregatedPromoters } = chartData;
+
+  // Calculate dynamic width for the scrollable chart
+  const cashierChartWidth = Math.max(800, monthlyCashierSales.length * 80);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
       
-      {/* Chart 1: Biweekly Cashier Sales */}
+      {/* Chart 1: Monthly Cashier Sales (Horizontally Scrollable) */}
       <section>
-        <h2>Cashier Sales (Biweekly)</h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={biweeklyCashierSales}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="period" height={60} angle={-30} textAnchor="end" />
-            <YAxis tickFormatter={dollarFormatter} />
-            <Tooltip formatter={dollarFormatter} />
-            <Legend />
-            <Line type="monotone" dataKey="totalSales" name="Total Sales" stroke="#8884d8" />
-            <Brush dataKey="period" height={30} stroke="#8884d8" />
-          </LineChart>
-        </ResponsiveContainer>
+        <h2>Cashier Sales (Monthly)</h2>
+        <div style={{ width: '100%', overflowX: 'auto', paddingBottom: '20px' }}>
+          <ResponsiveContainer width={cashierChartWidth} height={400}>
+            <LineChart data={monthlyCashierSales} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis tickFormatter={dollarFormatter} />
+              <Tooltip formatter={dollarFormatter} />
+              <Legend />
+              <Line type="monotone" dataKey="totalSales" name="Total Sales" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </section>
 
-      {/* Chart 2: Biweekly Gross Table Sales */}
+      {/* Chart 2: Monthly Gross Table Sales */}
       <section>
-        <h2>Gross Table Sales (Biweekly)</h2>
+        <h2>Gross Table Sales (Monthly)</h2>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={biweeklyTableSales}>
+          <BarChart data={monthlyTableSales}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="period" />
+            <XAxis dataKey="month" />
             <YAxis tickFormatter={dollarFormatter} />
             <Tooltip formatter={dollarFormatter} />
             <Legend />
@@ -41,19 +45,21 @@ export default function Charts({ chartData }) {
         </ResponsiveContainer>
       </section>
 
-      {/* Chart 3: Top 10 Promoters */}
+      {/* Chart 3: All Promoters (Vertically Scrollable) */}
       <section>
-        <h2>Top 10 Free Cover Promoters</h2>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={aggregatedPromoters} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" />
-            <YAxis type="category" dataKey="name" width={150} />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
-          </BarChart>
-        </ResponsiveContainer>
+        <h2>Free Cover Promoters (All)</h2>
+        <div style={{ width: '100%', height: '500px', overflowY: 'scroll', border: '1px solid #eee', padding: '10px' }}>
+            <ResponsiveContainer width="100%" height={aggregatedPromoters.length * 40}>
+              <BarChart data={aggregatedPromoters} layout="vertical" margin={{ top: 5, right: 30, left: 100, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis type="category" dataKey="name" width={150} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="guests" name="Total Guests" fill="#ffc658" />
+              </BarChart>
+            </ResponsiveContainer>
+        </div>
       </section>
 
     </div>
