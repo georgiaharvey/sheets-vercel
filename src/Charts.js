@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { FiLayout, FiUsers, FiDollarSign, FiBarChart2 } from 'react-icons/fi';
+import React, 'useState'
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts'
 
 // A custom tooltip component for a nicer, consistent look
 const CustomTooltip = ({ active, payload, label, formatter }) => {
@@ -15,14 +14,14 @@ const CustomTooltip = ({ active, payload, label, formatter }) => {
           </div>
         ))}
       </div>
-    );
+    )
   }
-  return null;
-};
+  return null
+}
 
 
 const FOHDashboard = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('overview')
 
   // --- DATA (UNCHANGED) ---
   const guestCountData = [ { name: 'Navid', count: 124, appearances: 7 }, { name: 'Parker', count: 67, appearances: 7 }, { name: 'DJ/Guest List', count: 64, appearances: 8 }, { name: 'Rodrigo', count: 48, appearances: 4 }, { name: 'Free Girls/Girls', count: 33, appearances: 2 }, { name: 'Andres', count: 24, appearances: 5 }, { name: 'Warren', count: 18, appearances: 6 }, { name: 'Navid\'s Brother', count: 14, appearances: 1 }, { name: 'Chihuahua', count: 12, appearances: 4 }, { name: 'Georgia', count: 10, appearances: 3 }, ];
@@ -35,7 +34,7 @@ const FOHDashboard = () => {
   const formatCurrency = (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
   const formatCurrencyDetailed = (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(value);
   const COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#6366f1', '#14b8a6', '#f97316', '#06b6d4', '#84cc16'];
-  const TABS = [ { id: 'overview', label: 'Overview', icon: FiLayout }, { id: 'guests', label: 'Guests', icon: FiUsers }, { id: 'cashier', label: 'Cashier', icon: FiDollarSign }, { id: 'tables', label: 'Tables', icon: FiBarChart2 } ];
+  const TABS = [ { id: 'overview', label: 'Overview' }, { id: 'guests', label: 'Guests' }, { id: 'cashier', label: 'Cashier' }, { id: 'tables', label: 'Tables' } ];
 
   return (
     <div className="min-h-screen bg-slate-900 p-4 sm:p-8 text-slate-300">
@@ -59,14 +58,13 @@ const FOHDashboard = () => {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-3 font-semibold transition-all duration-300 border-b-2 ${
+              className={`px-4 py-3 font-semibold transition-all duration-300 border-b-2 ${
                 activeTab === tab.id
                   ? 'border-purple-500 text-white'
                   : 'border-transparent text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-t-lg'
               }`}
             >
-              <tab.icon className="text-lg" />
-              <span>{tab.label}</span>
+              {tab.label}
             </button>
           ))}
         </div>
