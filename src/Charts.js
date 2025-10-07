@@ -106,7 +106,7 @@ const FOHDashboard = () => {
 
         {/* Tab Navigation */}
         <div className="flex gap-2 mb-6">
-          {['guests', 'cashier', 'tables'].map((tab) => (
+          {['overview', 'guests', 'cashier', 'tables'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -124,26 +124,7 @@ const FOHDashboard = () => {
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 shadow-xl">
-                <div className="text-blue-100 text-sm font-medium mb-1">Free Cover Guests</div>
-                <div className="text-4xl font-bold text-white">628</div>
-              </div>
-              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 shadow-xl">
-                <div className="text-purple-100 text-sm font-medium mb-1">Cashier Sales</div>
-                <div className="text-4xl font-bold text-white">{formatCurrency(45294)}</div>
-              </div>
-              <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 shadow-xl">
-                <div className="text-pink-100 text-sm font-medium mb-1">Table Sales</div>
-                <div className="text-4xl font-bold text-white">{formatCurrency(169302)}</div>
-              </div>
-              <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 shadow-xl">
-                <div className="text-orange-100 text-sm font-medium mb-1">Avg Table/Night</div>
-                <div className="text-4xl font-bold text-white">{formatCurrency(13023)}</div>
-              </div>
-            </div>
-
+            
             {/* Quick Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="bg-slate-800 rounded-xl p-6 shadow-xl">
