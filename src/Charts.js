@@ -71,6 +71,15 @@ const FOHDashboard = () => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const formatCurrencyDetailed = (value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
       minimumFractionDigits: 2,
     }).format(value);
   };
@@ -80,10 +89,15 @@ const FOHDashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">FOH Reporting Dashboard</h1>
-          <p className="text-purple-200">Comprehensive analysis of guest counts, cashier sales, and table revenue</p>
+        {/* Header with Logo */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-2">FOH Reporting Dashboard</h1>
+            <p className="text-purple-200">July 26 - August 23, 2024</p>
+          </div>
+          <div className="text-6xl font-serif text-yellow-500 tracking-wider" style={{ fontFamily: 'Georgia, serif' }}>
+            LUNA
+          </div>
         </div>
 
         {/* Tab Navigation */}
@@ -109,24 +123,20 @@ const FOHDashboard = () => {
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 shadow-xl">
-                <div className="text-blue-100 text-sm font-medium mb-1">Total Free Cover Guests</div>
-                <div className="text-3xl font-bold text-white">628</div>
-                <div className="text-blue-200 text-xs mt-1">Across 9 nights</div>
+                <div className="text-blue-100 text-sm font-medium mb-1">Free Cover Guests</div>
+                <div className="text-4xl font-bold text-white">628</div>
               </div>
               <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 shadow-xl">
-                <div className="text-purple-100 text-sm font-medium mb-1">Total Cashier Sales</div>
-                <div className="text-3xl font-bold text-white">{formatCurrency(45294.00)}</div>
-                <div className="text-purple-200 text-xs mt-1">14 nights tracked</div>
+                <div className="text-purple-100 text-sm font-medium mb-1">Cashier Sales</div>
+                <div className="text-4xl font-bold text-white">{formatCurrency(45294)}</div>
               </div>
               <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 shadow-xl">
-                <div className="text-pink-100 text-sm font-medium mb-1">Total Table Sales</div>
-                <div className="text-3xl font-bold text-white">{formatCurrency(169302.18)}</div>
-                <div className="text-pink-200 text-xs mt-1">13 nights tracked</div>
+                <div className="text-pink-100 text-sm font-medium mb-1">Table Sales</div>
+                <div className="text-4xl font-bold text-white">{formatCurrency(169302)}</div>
               </div>
               <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 shadow-xl">
-                <div className="text-orange-100 text-sm font-medium mb-1">Avg Table Sale/Night</div>
-                <div className="text-3xl font-bold text-white">{formatCurrency(13023.24)}</div>
-                <div className="text-orange-200 text-xs mt-1">Strong performance</div>
+                <div className="text-orange-100 text-sm font-medium mb-1">Avg Table/Night</div>
+                <div className="text-4xl font-bold text-white">{formatCurrency(13023)}</div>
               </div>
             </div>
 
@@ -138,7 +148,7 @@ const FOHDashboard = () => {
                   <BarChart data={guestCountData.slice(0, 5)}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                     <XAxis dataKey="name" stroke="#9ca3af" />
-                    <YAxis stroke="#9ca3af" />
+                    <YAxis stroke="#9ca3af" label={{ value: 'Guests', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
                     <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} />
                     <Bar dataKey="count" fill="#8b5cf6" radius={[8, 8, 0, 0]} />
                   </BarChart>
@@ -150,9 +160,9 @@ const FOHDashboard = () => {
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={cashierData.slice(0, 9).reverse()}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="date" stroke="#9ca3af" />
-                    <YAxis stroke="#9ca3af" />
-                    <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrency(value)} />
+                    <XAxis dataKey="date" stroke="#9ca3af" label={{ value: 'Date', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                    <YAxis stroke="#9ca3af" tickFormatter={formatCurrency} label={{ value: 'Sales', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
+                    <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrencyDetailed(value)} />
                     <Line type="monotone" dataKey="totalSales" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', r: 5 }} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -173,7 +183,7 @@ const FOHDashboard = () => {
                 <ResponsiveContainer width="100%" height={400}>
                   <BarChart data={guestCountData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis type="number" stroke="#9ca3af" />
+                    <XAxis type="number" stroke="#9ca3af" label={{ value: 'Total Guests', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
                     <YAxis dataKey="name" type="category" stroke="#9ca3af" width={150} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
@@ -216,15 +226,6 @@ const FOHDashboard = () => {
                   </tbody>
                 </table>
               </div>
-
-              <div className="mt-6 p-4 bg-purple-900/30 rounded-lg border border-purple-500/30">
-                <p className="text-purple-200 text-sm">
-                  <strong>Total Free Cover Guests:</strong> 628 guests across 9 nights (8/7, 8/8, 8/9, 8/14, 8/15, 8/16, 8/21, 8/22, 8/23)
-                </p>
-                <p className="text-purple-200 text-sm mt-2">
-                  <strong>Top Performer:</strong> Navid with 124 total guests, including a single-night high of 47 guests on 8/23
-                </p>
-              </div>
             </div>
           </div>
         )}
@@ -239,8 +240,8 @@ const FOHDashboard = () => {
                 {biweeklyData.map((period, index) => (
                   <div key={index} className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6">
                     <div className="text-blue-100 text-sm font-medium mb-2">{period.period}</div>
-                    <div className="text-3xl font-bold text-white mb-1">{formatCurrency(period.totalSales)}</div>
-                    <div className="text-blue-200 text-sm">Avg: {formatCurrency(period.avgPerNight)}/night</div>
+                    <div className="text-3xl font-bold text-white mb-1">{formatCurrencyDetailed(period.totalSales)}</div>
+                    <div className="text-blue-200 text-sm">Avg: {formatCurrencyDetailed(period.avgPerNight)}/night</div>
                   </div>
                 ))}
               </div>
@@ -248,9 +249,9 @@ const FOHDashboard = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={biweeklyData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="period" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrency(value)} />
+                  <XAxis dataKey="period" stroke="#9ca3af" label={{ value: 'Period', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                  <YAxis stroke="#9ca3af" tickFormatter={formatCurrency} label={{ value: 'Sales', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrencyDetailed(value)} />
                   <Bar dataKey="totalSales" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -263,9 +264,9 @@ const FOHDashboard = () => {
               <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={[...cashierData].reverse()}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="date" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrency(value)} />
+                  <XAxis dataKey="date" stroke="#9ca3af" label={{ value: 'Date', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                  <YAxis stroke="#9ca3af" tickFormatter={formatCurrency} label={{ value: 'Sales', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrencyDetailed(value)} />
                   <Legend />
                   <Line type="monotone" dataKey="totalSales" stroke="#3b82f6" strokeWidth={3} name="Total Sales" />
                   <Line type="monotone" dataKey="cardTrans" stroke="#10b981" strokeWidth={2} name="Card" />
@@ -288,9 +289,9 @@ const FOHDashboard = () => {
                     {[...cashierData].reverse().map((item, index) => (
                       <tr key={index} className="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
                         <td className="py-3 px-4 text-white font-medium">{item.date}</td>
-                        <td className="py-3 px-4 text-right text-white font-bold">{formatCurrency(item.totalSales)}</td>
-                        <td className="py-3 px-4 text-right text-green-400">{formatCurrency(item.cardTrans)}</td>
-                        <td className="py-3 px-4 text-right text-orange-400">{formatCurrency(item.cashTrans)}</td>
+                        <td className="py-3 px-4 text-right text-white font-bold">{formatCurrencyDetailed(item.totalSales)}</td>
+                        <td className="py-3 px-4 text-right text-green-400">{formatCurrencyDetailed(item.cardTrans)}</td>
+                        <td className="py-3 px-4 text-right text-orange-400">{formatCurrencyDetailed(item.cashTrans)}</td>
                         <td className="py-3 px-4 text-right text-slate-300">{((item.cashTrans / item.totalSales) * 100).toFixed(1)}%</td>
                       </tr>
                     ))}
@@ -311,8 +312,8 @@ const FOHDashboard = () => {
                 {biweeklyTableData.map((period, index) => (
                   <div key={index} className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg p-6">
                     <div className="text-pink-100 text-sm font-medium mb-2">{period.period}</div>
-                    <div className="text-3xl font-bold text-white mb-1">{formatCurrency(period.totalSales)}</div>
-                    <div className="text-pink-200 text-sm">Avg: {formatCurrency(period.avgPerNight)}/night</div>
+                    <div className="text-3xl font-bold text-white mb-1">{formatCurrencyDetailed(period.totalSales)}</div>
+                    <div className="text-pink-200 text-sm">Avg: {formatCurrencyDetailed(period.avgPerNight)}/night</div>
                   </div>
                 ))}
               </div>
@@ -320,9 +321,9 @@ const FOHDashboard = () => {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={biweeklyTableData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="period" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
-                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrency(value)} />
+                  <XAxis dataKey="period" stroke="#9ca3af" label={{ value: 'Period', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                  <YAxis stroke="#9ca3af" tickFormatter={formatCurrency} label={{ value: 'Sales', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
+                  <Tooltip contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} formatter={(value) => formatCurrencyDetailed(value)} />
                   <Bar dataKey="totalSales" fill="#ec4899" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -335,11 +336,11 @@ const FOHDashboard = () => {
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={[...tableData].reverse()}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="date" stroke="#9ca3af" />
-                  <YAxis stroke="#9ca3af" />
+                  <XAxis dataKey="date" stroke="#9ca3af" label={{ value: 'Date', position: 'insideBottom', offset: -5, fill: '#9ca3af' }} />
+                  <YAxis stroke="#9ca3af" tickFormatter={formatCurrency} label={{ value: 'Sales', angle: -90, position: 'insideLeft', fill: '#9ca3af' }} />
                   <Tooltip 
                     contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }} 
-                    formatter={(value, name, props) => [formatCurrency(value), props.payload.day]}
+                    formatter={(value, name, props) => [formatCurrencyDetailed(value), props.payload.day]}
                   />
                   <Bar dataKey="sales" radius={[8, 8, 0, 0]}>
                     {[...tableData].reverse().map((entry, index) => (
@@ -372,7 +373,7 @@ const FOHDashboard = () => {
                             {item.day}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-right text-white font-bold">{formatCurrency(item.sales)}</td>
+                        <td className="py-3 px-4 text-right text-white font-bold">{formatCurrencyDetailed(item.sales)}</td>
                         <td className="py-3 px-4 text-right text-slate-300">{((item.sales / 169302.18) * 100).toFixed(1)}%</td>
                       </tr>
                     ))}
@@ -380,26 +381,11 @@ const FOHDashboard = () => {
                   <tfoot>
                     <tr className="border-t-2 border-slate-600 bg-slate-700/50">
                       <td colSpan="2" className="py-3 px-4 text-white font-bold">TOTAL</td>
-                      <td className="py-3 px-4 text-right text-white font-bold">{formatCurrency(169302.18)}</td>
+                      <td className="py-3 px-4 text-right text-white font-bold">{formatCurrencyDetailed(169302.18)}</td>
                       <td className="py-3 px-4 text-right text-white font-bold">100%</td>
                     </tr>
                   </tfoot>
                 </table>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-pink-900/30 rounded-lg border border-pink-500/30">
-                  <div className="text-pink-300 text-sm font-medium mb-1">Saturday Average</div>
-                  <div className="text-2xl font-bold text-white">{formatCurrency(19414.86)}</div>
-                </div>
-                <div className="p-4 bg-purple-900/30 rounded-lg border border-purple-500/30">
-                  <div className="text-purple-300 text-sm font-medium mb-1">Friday Average</div>
-                  <div className="text-2xl font-bold text-white">{formatCurrency(13063.62)}</div>
-                </div>
-                <div className="p-4 bg-blue-900/30 rounded-lg border border-blue-500/30">
-                  <div className="text-blue-300 text-sm font-medium mb-1">Thursday Average</div>
-                  <div className="text-2xl font-bold text-white">{formatCurrency(6130.59)}</div>
-                </div>
               </div>
             </div>
           </div>
